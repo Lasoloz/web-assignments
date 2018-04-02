@@ -1,0 +1,56 @@
+/*
+ * Heim László
+ * hlim1626
+ * 522-es csoport
+ * 07-es feladat
+ * Írjunk néhány összefüggő HTML oldalt tetszőleges (lehetőleg értelmes) tar-
+ * talommal, mely kötelező módon tartalmazza az alábbi elemeket:...
+*/
+
+/*
+ * Page style
+*/
+
+.base {
+    margin: 5px auto;
+    width: 600px;
+    padding: 5px;
+    border: 1px solid black;
+    background-color: white;
+}
+
+
+.navbar, .footer, .contentbase {
+    border: 1px solid black;
+    width: 600px;
+}
+
+.navbar {
+    margin: 0 0 5px;
+}
+
+.footer {
+    margin: 5px 0 0;
+}
+
+
+.contentbase {
+    margin: 5px 0 5px;
+}
+
+.content {
+    width: 600px;
+    height: 300px;
+}
+
+iframe {
+    border: 0;
+}
+
+
+
+/* 1 */
+body {
+    background-image: url("sky-earth-galaxy-universe.jpg");
+    background-repeat: repeat;
+}

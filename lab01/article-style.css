@@ -1,0 +1,108 @@
+/*
+ * Heim László
+ * hlim1626
+ * 522-es csoport
+ * 07-es feladat
+ * Írjunk néhány összefüggő HTML oldalt tetszőleges (lehetőleg értelmes) tar-
+ * talommal, mely kötelező módon tartalmazza az alábbi elemeket:...
+*/
+
+/* 2 */
+p, em {
+    color: lightcoral;
+    background-color: black;
+}
+
+/* 3 */
+ol.good {
+    color: darkgreen;
+}
+
+ol.bad {
+    color: darkred;
+}
+
+
+/* 4 */
+.ugly {
+    color: pink;
+    background-color: olivedrab;
+    font-family: 'Times New Roman', Times, serif;
+    text-align: center;
+    border: 2px chocolate dotted;
+}
+
+
+/* 5 */
+section > h2 + ol {
+    color: aquamarine;
+    /* font-variant-caps: unicase; */
+}
+
+section > h2 + ol::first-letter {
+    text-transform: lowercase;
+}
+
+
+/* 6 */
+a.rainbow-link:link {
+    color: lightgreen;
+    background-color: black;
+}
+a.rainbow-link:visited {
+    color: red;
+    background-color: white;
+    font-weight: 100;
+}
+a.rainbow-link:hover {
+    color: yellow;
+    background-color: gray;
+    font-weight: 600;
+    font-style: italic;
+}
+a.rainbow-link:active {
+    color: blue;
+    background-color: white;
+    font-weight: 900;
+}
+
+
+/* 7 */
+div.double {
+    border-width: 6px;
+    border-style: double;
+    text-align: left;
+    vertical-align: top;
+
+    padding: 7px 5px 2px 2px;
+}
+
+
+/* 8 */
+td.chess1:nth-child(even), tr.chess2:nth-child(odd) {
+    background-color: white;
+    color: black;
+}
+td.chess1:nth-child(odd), td.chess2:nth-child(even) {
+    background-color: black;
+    color: white;
+}
+
+
+/* 9 */
+img.overlap1 {
+    left: 200px;
+    position: absolute;
+}
+img.overlap2 {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* 10 */
+@media screen and (min-width: 1000px) {
+    img.overlap1 {
+        position: relative;
+        left: inherit;
+    }
+}

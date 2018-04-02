@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- Heim László -->
+<!-- hlim1626 -->
+<!-- 522-es csoport -->
+<!-- 07-es feladat -->
+<!-- Írjunk néhány összefüggő HTML oldalt tetszőleges (lehetőleg értelmes) tar- -->
+<!-- talommal, mely kötelező módon tartalmazza az alábbi elemeket:... -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="main.css">
+    <title>First assignment</title>
+</head>
+<body>
+    <div class="base">
+        <div class="navbar">
+            <nav>
+                <a href="article-about-my.html">Welcome post</a>|
+                <a href="/lab01/article-university.html">About me post</a>|
+                <a href="https://lmgtfy.com">If somebody asks a stupid question...</a>
+            </nav>
+        </div>
+
+        <div class="contentbase">
+            <a href="article-university.html">Open in full tab</a>
+            <!-- I know... `iframe`s shouldn't be used. (But I didn't want copy-paste) -->
+            <iframe class="content" src="/lab01/article-university.html"></iframe>
+        </div>
+        <div class="contentbase">
+            <a href="article-table.html">Open in full tab</a>
+            <iframe class="content" src="article-table.html"></iframe>
+        </div>
+        <div class="contentbase">
+            <a href="/lab01/article-about-my.html">Open in full tab</a>
+            <iframe class="content" src="article-about-my.html"></iframe>
+        </div>
+
+        <div class="footer">
+            <footer>Copyright &copy; 2018 Heim László</footer>
+        </div>
+    </div>
+</body>
+</html>

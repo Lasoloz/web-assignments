@@ -1,0 +1,9 @@
+/*
+ * Heim László, hlim1626, 522-es csoport
+ * 2.1-es feladat
+*/
+
+p#errorParagraph {
+    height: 0;
+    transition: height 1s;
+}
