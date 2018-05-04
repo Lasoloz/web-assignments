@@ -1,0 +1,17 @@
+#div_error {
+    color: red;
+    width: 100%;
+}
+
+.box {
+    border: 1px solid black;
+    min-width: 500px;
+}
+
+#div_list {
+    float: left;
+}
+
+#div_details {
+    float: right;
+}

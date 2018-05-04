@@ -1,0 +1,61 @@
+mixin form(formData)
+  form(action="/", method="POST", id=formId)
+    each inp in formData
+      case inp.type
+        when "dropdown"
+          +dropdown(inp)
+        when "text"
+          +text(inp)
+        when "question"
+          +question(inp)
+        when "checkbox"
+          +checkbox(inp)
+      br
+      hr
+
+    button Post data
+
+
+mixin text(obj)
+  label(for=obj.name)= obj.label
+  input(name=obj.name, id="textarea-" + obj.name, type="text")&attributes(obj.attributes)
+
+mixin dropdown(obj)
+  select(name=obj.name, id="select-"+obj.name)&attributes(obj.attributes)
+    for item in obj.items
+      option(value=item)= item
+
+mixin question(obj)
+  p= obj.question
+  input(type="radio", name=obj.name, value="1")
+  label Igen
+  br
+  input(type="radio", name=obj.name, value="0")
+  label Nem
+
+mixin checkbox(obj)
+  p= obj.name
+  for item in obj.items
+    - var ch = item.value
+    input(type="checkbox", name= obj.name, checked=ch)
+    label= item.name
+    br
+
+
+
+<!DOCTYPE html>
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    title Document
+
+    link(rel="stylesheet", href="/public/main.css")
+  body
+    .base
+      h1 Fill this form:
+      +form(formData)
+    if (saved)
+      .base
+        p Elmentve! Próbáld `/sessionData` módon lekérni az adatot!

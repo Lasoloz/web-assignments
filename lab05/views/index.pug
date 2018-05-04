@@ -1,0 +1,38 @@
+mixin addAirportList(airportList)
+  option(value="")
+  each airport in airportList
+    option(value=airport)= airport
+
+<!DOCTYPE html>
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+
+    link(rel="stylesheet", href="/public/index.css")
+
+    title Reptéri adatok
+  body
+    #div_message
+      div Message here
+      button(onclick="hideMessage();") Close
+
+    h1 Reptéri adatok
+
+    if success
+      form
+        div.div_fifty.div_left
+          label From:&nbsp;
+          select#select_fromAirports(name="fromAirports", onclick="getToAirports();")
+            +addAirportList(fromAirports)
+        div.div_fifty.div_right
+          label To:&nbsp;
+          select#select_toAirports(name="toAirports")
+            //- +addAirportList(toAirports)
+            +addAirportList([])
+    else
+      p Failed to query flight data!
+
+
+    script(src="/public/index.js")

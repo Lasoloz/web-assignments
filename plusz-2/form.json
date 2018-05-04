@@ -1,0 +1,24 @@
+{
+    "nCipomeret3943": "0",
+    "sNev": "Név:",
+    "sValami": "Valami:",
+    "iKedvencCsoki": "0",
+    "asKedvencCsokiList": [
+        "Kandia",
+        "Heidi",
+        "Milka",
+        "Merci"
+    ],
+    "bDohanyzik": false,
+    "sDohanyzikQuestion": "Dohányzik?",
+    "abHarchk1": [
+        false,
+        false,
+        false
+    ],
+    "abHarchk": [
+        "szeret",
+        "nemszeret",
+        "nemigen szeret"
+    ]
+}
