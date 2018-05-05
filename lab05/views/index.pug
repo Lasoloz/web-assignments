@@ -31,6 +31,10 @@ html(lang="en")
           select#select_toAirports(name="toAirports")
             //- +addAirportList(toAirports)
             +addAirportList([])
+
+        button#listFlights List flights
+
+      #flightList
     else
       p Failed to query flight data!
 

@@ -10,18 +10,41 @@ let router = new Router();
 
 
 // Add flight requests:
-router.get("/listFromTo/:flightName", function (req, res) {
-    const fromAirport = req.params.flightName;
+router.get("/list/:fromAirport", function (req, res) {
+    const fromAirport = req.params.fromAirport;
 
     if (fromAirport == undefined) {
         return res.send({ success: false });
     }
 
     Flight.find({ fromAirport }).then(function listFromToResolved(flights) {
-        let toAirports = flights.map(flight => flight.toAirport);
-        res.send({ success: true, toAirports });
+        res.send({
+            success: true,
+            toAirports: [... new Set(flights.map(flight => flight.toAirport))]
+        });
     }).catch(function (error) {
         res.send({ success: false });
+    });
+});
+
+
+router.get("/:fromAirport/:toAirport", function (req, res) {
+    const fromAirport = req.params.fromAirport;
+    const toAirport = req.params.toAirport;
+
+    if (!fromAirport || !toAirport) {
+        return res.send({ success: false });
+    }
+
+    Flight.find({
+        fromAirport, toAirport
+    }).then(function listFlightsResolved(flights) {
+        res.send({
+            success: true,
+            flights: flights.map(flight => flight.toObject())
+        });
+    }).catch(function listFlightsRejected(flights) {
+        res.send({ success: true });
     });
 });
 

@@ -3,6 +3,7 @@
 // Global vars:
 // ============
 var lastOnlineState = true;
+var offlineRequests = [];
 var GENERIC_SERVER_ERROR = "Could not communicate with server!";
 var GENERIC_CLIENT_ERROR = "Client error!";
 
@@ -73,6 +74,7 @@ function checkOnlineStateChanged() {
             createNotification(
                 "Services are online again!", "notification"
             );
+            finalizeSavedRequests();
         }
 
         lastOnlineState = true;
@@ -112,10 +114,12 @@ function getToAirports() {
     // 1: Create request:
     var xmlhttp = getNewXmlHttpObject();
     if (xmlhttp == null) {
-        return createNotification("Your browser does not support");
+        return createNotification(
+            "Your browser does not support ajax requests!",
+            "error"
+        );
     }
 
-    // TODO: Create ajax request
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
             var respObj = JSON.parse(this.responseText);
@@ -131,9 +135,19 @@ function getToAirports() {
                 return createNotification(GENERIC_CLIENT_ERROR, "error");
             }
 
-            console.log(respObj);
+            if (respObj.success) {
+                toAirportsSelect.innerHTML = "";
+                toAirportsSelect.appendChild(document.createElement("option"));
 
-            toAirportsSelect.childNodes.innerHTML = "<option>Semmi</option>";
+                for (var i = 0; i < respObj.toAirports.length; ++i) {
+                    var opt = document.createElement("option");
+                    opt.setAttribute("value", respObj.toAirports[i]);
+                    opt.appendChild(
+                        document.createTextNode(respObj.toAirports[i])
+                    );
+                    toAirportsSelect.appendChild(opt);
+                }
+            }
         }
     }
 
@@ -142,6 +156,130 @@ function getToAirports() {
         createNotification(GENERIC_SERVER_ERROR, "error");
     };
     xmlhttp.open("GET", "/flight/list/" + fromAirportName, true);
+    xmlhttp.send(null);
+}
+
+
+function listEventHandler(event) {
+    event.preventDefault();
+
+    var fromSelect = document.getElementById("select_fromAirports");
+    var toSelect = document.getElementById("select_toAirports");
+
+    if (!fromSelect || !toSelect) {
+        return createNotification(GENERIC_CLIENT_ERROR, "error");
+    }
+
+    var fromVal = fromSelect.options[fromSelect.selectedIndex].value;
+    var toVal = toSelect.options[toSelect.selectedIndex].value;
+    if (fromVal == "" || toVal == "") {
+        return createNotification(
+            "Takeoff airport and destination airport should be both defined!",
+            "warning"
+        );
+    }
+
+    if (!lastOnlineState) {
+        offlineRequests.push({ fromVal, toVal });
+        return createNotification(
+            "Request saved until offline mode!", "notification"
+        );
+    }
+
+    // Clear old content:
+    var listDiv = document.getElementById("flightList");
+    if (!listDiv) {
+        return createNotification(GENERIC_CLIENT_ERROR, "error");
+    }
+    listDiv.innerHTML = "";
+    makeFlightRequest(fromVal, toVal);
+}
+
+
+
+function finalizeSavedRequests() {
+    var listDiv = document.getElementById("flightList");
+    if (!listDiv) {
+        return createNotification(GENERIC_CLIENT_ERROR, "error");
+    }
+    listDiv.innerHTML = "";
+
+    for (var i = 0; i < offlineRequests.length; ++i) {
+        var req = offlineRequests[i];
+
+        makeFlightRequest(req.fromVal, req.toVal);
+    }
+
+    offlineRequests.length = 0;
+}
+
+
+function createEmphasized(textVal) {
+    var emElem = document.createElement("strong");
+    emElem.appendChild(document.createTextNode(textVal));
+
+    return emElem;
+}
+
+function appendListPart(listElem, label, val) {
+    listElem.appendChild(createEmphasized(label));
+    listElem.appendChild(document.createTextNode(val));
+    listElem.appendChild(document.createElement("br"));
+}
+
+
+function makeFlightRequest(fromVal, toVal) {
+    var xmlhttp = getNewXmlHttpObject();
+    if (xmlhttp == null) {
+        return createNotification(
+            "Your browser does not support ajax requests!",
+            "error"
+        );
+    }
+
+    xmlhttp.onreadystatechange = function addFlightToList() {
+        if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+            var respObj = JSON.parse(this.responseText);
+            if (!respObj.success) {
+                return createNotification(
+                    "Failed to query flights between two cities!", "error"
+                );
+            }
+
+            var listDiv = document.getElementById("flightList");
+            if (!listDiv) {
+                return createNotification(GENERIC_CLIENT_ERROR, "error");
+            }
+
+            var flights = respObj.flights;
+
+            var heading = document.createElement("h3");
+            heading.appendChild(document.createTextNode("Requested flights:"));
+            listDiv.appendChild(heading);
+
+            for (var i = 0; i < flights.length; ++i) {
+                var listElem = document.createElement("div");
+                listElem.setAttribute("class", "list-elem");
+
+                appendListPart(listElem, "From: ", flights[i].fromAirport);
+                appendListPart(listElem, "To: ", flights[i].toAirport);
+                appendListPart(listElem, "Airline: ", flights[i].airline);
+                appendListPart(listElem, "Start date: ", flights[i].startDate);
+                appendListPart(listElem, "End date: ", flights[i].endDate);
+                appendListPart(
+                    listElem, "Flight number: ", flights[i].flightNumber
+                );
+
+                listDiv.appendChild(listElem);
+            }
+        }
+    };
+
+    xmlhttp.onerror = function () {
+        createNotification(GENERIC_SERVER_ERROR, "error");
+    }
+
+    xmlhttp.open("GET", "/flight/" + fromVal + "/" + toVal, true);
     xmlhttp.send(null);
 }
 
@@ -161,5 +299,13 @@ function getToAirports() {
             "Your browser does not support HTML5 local storage!",
             "error"
         );
+    }
+
+    // Add list button event:
+    var listButton = document.getElementById("listFlights");
+    if (!listButton) {
+        createNotification(GENERIC_CLIENT_ERROR, "error");
+    } else {
+        listButton.addEventListener("click", listEventHandler);
     }
 })();

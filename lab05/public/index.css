@@ -32,3 +32,9 @@
 form select {
     min-width: 150px;
 }
+
+
+.list-elem {
+    border: 1px solid black;
+    width: 100%;
+}
