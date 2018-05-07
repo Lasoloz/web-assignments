@@ -3,7 +3,6 @@
 // Global vars:
 // ============
 var lastOnlineState = true;
-var offlineRequests = [];
 var GENERIC_SERVER_ERROR = "Could not communicate with server!";
 var GENERIC_CLIENT_ERROR = "Client error!";
 
@@ -180,7 +179,16 @@ function listEventHandler(event) {
     }
 
     if (!lastOnlineState) {
-        offlineRequests.push({ fromVal, toVal });
+        var localRequestArray = JSON.parse(
+            localStorage.getItem("savedRequests")
+        );
+        if (!localRequestArray) {
+            return createNotification(GENERIC_CLIENT_ERROR, "error");
+        }
+        localRequestArray.push({ fromVal, toVal });
+        localStorage.setItem(
+            "savedRequests", JSON.stringify(localRequestArray)
+        );
         return createNotification(
             "Request saved until offline mode!", "notification"
         );
@@ -204,13 +212,17 @@ function finalizeSavedRequests() {
     }
     listDiv.innerHTML = "";
 
-    for (var i = 0; i < offlineRequests.length; ++i) {
-        var req = offlineRequests[i];
+    var localRequestArray = JSON.parse(localStorage.getItem("savedRequests"));
+    if (!localRequestArray) {
+        return createNotification(GENERIC_CLIENT_ERROR, "error");
+    }
+    for (var i = 0; i < localRequestArray.length; ++i) {
+        var req = localRequestArray[i];
 
         makeFlightRequest(req.fromVal, req.toVal);
     }
 
-    offlineRequests.length = 0;
+    localStorage.setItem("savedRequests", JSON.stringify([]));
 }
 
 
@@ -308,4 +320,7 @@ function makeFlightRequest(fromVal, toVal) {
     } else {
         listButton.addEventListener("click", listEventHandler);
     }
+
+    // Create saved requests array in local storage:
+    localStorage.setItem("savedRequests", JSON.stringify([]));
 })();
